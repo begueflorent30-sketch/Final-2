@@ -56,7 +56,7 @@ exports.handler = async function (event) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5',
         max_tokens: 1000,
         system: system,
         messages: [{ role: 'user', content: message }]
@@ -64,7 +64,10 @@ exports.handler = async function (event) {
     });
 
     if (!response.ok) {
-      throw new Error(`Claude API error: ${response.statusText}`);
+      const errorBody = await response.text();
+      console.error('Claude API error status:', response.status);
+      console.error('Claude API error body:', errorBody);
+      throw new Error(`Claude API error: ${response.status} - ${errorBody}`);
     }
 
     const data = await response.json();
@@ -92,8 +95,12 @@ exports.handler = async function (event) {
   } catch (error) {
     console.error('Erreur chat:', error);
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Erreur serveur', details: error.message })
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        reply: `[DEBUG] Erreur: ${error.message}`,
+        error: true 
+      })
     };
   }
 };
