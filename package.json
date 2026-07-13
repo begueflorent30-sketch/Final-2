@@ -1,0 +1,7 @@
+{
+  "name": "lemecanodiag",
+  "version": "1.0.0",
+  "description": "LeMécanoDiag - Assistant IA de diagnostic automobile",
+  "main": "index.html",
+  "license": "MIT"
+}
